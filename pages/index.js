@@ -1,7 +1,9 @@
 import Head from 'next/head'
+import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
+  const [message, setMessage] = useState('Please Press...');
   return (
     <div className={styles.container}>
       <Head>
@@ -11,7 +13,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          FastFeedback
         </h1>
 
         <p className={styles.description}>
@@ -49,6 +51,12 @@ export default function Home() {
           </a>
         </div>
       </main>
+
+      <button onClick={async () => {
+        const result = await fetch('http://localhost:3000/api/hello');
+        const { name } = await result.json();
+        setMessage(`Hi, my name is ${name}`); 
+      }}>{message}</button>
 
       <footer className={styles.footer}>
         <a
