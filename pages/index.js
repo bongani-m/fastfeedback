@@ -1,8 +1,10 @@
-import Head from 'next/head'
-import { useState } from 'react'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head';
+import { useState } from 'react';
+import { useAuth } from '../lib/auth';
+import styles from '../styles/Home.module.css';
 
 export default function Home() {
+  const auth = useAuth();
   const [message, setMessage] = useState('Please Press...');
   return (
     <div className={styles.container}>
@@ -19,44 +21,28 @@ export default function Home() {
         <p className={styles.description}>
           Get started by editing{' '}
           <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        </p> 
+        <button onClick={() => {
+          auth.signinWithGithub();
+        }}>Sign In</button>
+        <div>{JSON.stringify(auth?.user?.email)}</div>
+        {auth?.user && 
+        <button onClick={() => {
+          auth.signout();
+        }}>Sign Out</button>}
       </main>
 
-      <button onClick={async () => {
-        const result = await fetch('http://localhost:3000/api/hello');
-        const { name } = await result.json();
+      <button
+        onClick={async () => {
+          const result = await fetch('http://localhost:3000/api/hello');
+          const { name } = await result.json();
+          setMessage(`Hi, my name is ${name}`);
         setMessage(`Hi, my name is ${name}`); 
-      }}>{message}</button>
+          setMessage(`Hi, my name is ${name}`);
+        }}
+      >
+        {message}
+      </button>
 
       <footer className={styles.footer}>
         <a
@@ -69,5 +55,5 @@ export default function Home() {
         </a>
       </footer>
     </div>
-  )
+  );
 }
